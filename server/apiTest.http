@@ -1,0 +1,26 @@
+GET {{hostname}}/users
+
+###
+POST {{hostname}}/users
+content-type: application/json
+
+{
+    "name":"jerry jr",
+    "email":"jerry@492gmail.com",
+    "password":"jerry@123",
+    "rePassword":"jerry@123"
+}
+
+###
+POST {{hostname}}/sessions
+content-type: application/json
+
+{
+    "email":"jerry@492gmail.com",
+    "password":"jerry@123"
+}
+
+###
+GET  {{hostname}}/sessions
+content-type: application/json
+authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImplcnJ5QDQ5MmdtYWlsLmNvbSIsIm5hbWUiOiJqZXJyeSBqciIsIl9pZCI6IjY0MTk1YjdjM2FlYjRiZjBjNDg1MDQwOSIsInNlc3Npb24iOiI2NDFkNzY2ZjY5ZGJiNWZmYWVkNGQwNWYiLCJpYXQiOjE2Nzk2NTI0NjMsImV4cCI6MTY3OTY1MzM2M30.EwlW4l2NUV6v6zT3Z5r4rwvm-0FDgR6UQI6WGJxi9uyBWZ8e7MhwAkaydDzumnJrnOspkWkoKF0XeDVhkhmUEsNqmwBddYllu6fgZPuEFcnVxaUUGzs32sN1Uf3ZyUyhC3r_moWhOlkBjZfIUV72Nf01Mrk5_9bjJLXoW_nLTkbRYgKfsW1DgjR0cop7R-j3i17gxwGBng0xOGGaEOb0dvhQIj3gEzXQb_xKgwKO7YgQYShjaZwNBLXi26qDT0fFqnWcuDwWjS-rhqZVFOctYos2BxwAHEaFm0BX9jdUBqLkewhTQeAYK0FH3D0jUS2osJzPP1slTsTFazaK8GGEdg"

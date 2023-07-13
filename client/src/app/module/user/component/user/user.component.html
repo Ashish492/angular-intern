@@ -1,0 +1,179 @@
+<button
+  type="button"
+  class="btn btn-primary my-3 btn-lg"
+  data-bs-toggle="modal"
+  data-bs-target="#exampleModal"
+  (click)="edit = false"
+>
+  Add user
+</button>
+<table class="table">
+  <thead>
+    <tr>
+      <td>#</td>
+      <td scope="col">name</td>
+      <td scope="col">email</td>
+      <td scope="col">address</td>
+      <td scope="col">telephone</td>
+      <td scope="col">action</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.address }}</td>
+      <td>{{ user.telephone }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-warning"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-bs-custom-class="custom-tooltip"
+          data-bs-title="edit"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          (click)="editClickHandler(user)"
+        >
+          <i class="fas fa-user-edit"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-bs-custom-class="custom-tooltip"
+          data-bs-title="delete user"
+          (click)="deleteHandler(user.id)"
+        >
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- modal -->
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">User form</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Email address</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              formControlName='"email'
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              [class.is-invalid]="
+                getControls('email')?.touched && getControls('email')?.invalid
+              "
+            />
+            <div class="invalid-feedback">email is required</div>
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              aria-describedby="name"
+              [class.is-invalid]="
+                getControls('name')?.touched && getControls('name')?.invalid
+              "
+            />
+            <div class="invalid-feedback">name is required</div>
+          </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">address</label>
+            <input
+              type="text"
+              formControlName="address"
+              class="form-control"
+              id="address"
+              aria-describedby="emailHelp"
+              [class.is-invalid]="
+                getControls('address')?.touched &&
+                getControls('address')?.invalid
+              "
+            />
+            <div class="invalid-feedback">address is required</div>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">phone</label>
+            <input
+              type="tel"
+              class="form-control"
+              formControlName="phone"
+              id="phone"
+              aria-describedby="emailHelp"
+              [class.is-invalid]="
+                getControls('telephone')?.touched &&
+                getControls('telephone')?.invalid
+              "
+            />
+            <div class="invalid-feedback">enter valid data</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <ng-container *ngIf="edit; else elseTemplate">
+          <button
+            type="button"
+            [disabled]="form.invalid"
+            class="btn btn-warning"
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+              *ngIf="loading"
+            ></span>
+            edit user
+          </button>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <button
+            type="button"
+            [disabled]="form.invalid"
+            class="btn btn-primary"
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+              *ngIf="loading"
+            ></span>
+            add user
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

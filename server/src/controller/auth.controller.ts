@@ -8,7 +8,7 @@ const loginHandler: CustomRouteFunction<Pick<AdminDto, 'username' | 'password'>>
   try {
     const user = await validatePassword(req.body)
     if (!user) throw new Error()
-    const payload = pick(user, ['id', 'email'])
+    const payload = pick(user, ['username', 'id'])
     // const accessToken = await signJWT(payload, {
     //   expiresIn: process.env.ACCESS_TOKEN_TTL,
     // })
@@ -24,6 +24,7 @@ const loginHandler: CustomRouteFunction<Pick<AdminDto, 'username' | 'password'>>
     // })
     res.send({ token, user: payload })
   } catch (error) {
+    console.log(error)
     throw createHttpError(403, 'invalid email or password')
   }
 }

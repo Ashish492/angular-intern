@@ -1,12 +1,21 @@
-<button
-  type="button"
-  class="btn btn-primary my-3 btn-lg"
-  data-bs-toggle="modal"
-  data-bs-target="#exampleModal"
-  (click)="edit = false"
->
-  Add user
-</button>
+<div class="d-flex justify-content-between">
+  <button
+    type="button"
+    class="btn btn-primary my-3 btn-lg"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+    (click)="edit = false"
+  >
+    Add user
+  </button>
+  <input
+    class="form-control me-2 w-25 h-50 mt-3"
+    type="search"
+    placeholder="SearchByName"
+    aria-label="Search"
+    [formControl]="searchControl"
+  />
+</div>
 <table class="table">
   <thead>
     <tr>
@@ -19,6 +28,15 @@
     </tr>
   </thead>
   <tbody>
+    <div
+      class="d-flex justify-content-center w-100 position-absolute"
+      style="width: 100vw"
+      *ngIf="loadingData"
+    >
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <tr *ngFor="let user of users; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ user.name }}</td>
@@ -41,7 +59,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-danger"
+          class="btn btn-danger ms-3"
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           data-bs-custom-class="custom-tooltip"
@@ -76,7 +94,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form [formGroup]="form">
           <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label"
               >Email address</label
@@ -84,7 +102,7 @@
             <input
               type="email"
               class="form-control"
-              formControlName='"email'
+              formControlName="email"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               [class.is-invalid]="
@@ -127,7 +145,7 @@
             <input
               type="tel"
               class="form-control"
-              formControlName="phone"
+              formControlName="telephone"
               id="phone"
               aria-describedby="emailHelp"
               [class.is-invalid]="
@@ -140,7 +158,12 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          id="close"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
           Close
         </button>
         <ng-container *ngIf="edit; else elseTemplate">
@@ -148,6 +171,7 @@
             type="button"
             [disabled]="form.invalid"
             class="btn btn-warning"
+            (click)="editHandler()"
           >
             <span
               class="spinner-border spinner-border-sm"
@@ -163,6 +187,7 @@
             type="button"
             [disabled]="form.invalid"
             class="btn btn-primary"
+            (click)="addUser()"
           >
             <span
               class="spinner-border spinner-border-sm"

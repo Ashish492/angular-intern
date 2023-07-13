@@ -5,8 +5,7 @@ import { JWTPayload } from '../types'
 import { findAdminByEmail } from '../service'
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.PUBLIC_KEY,
-  algorithms: ['RS256'],
+  secretOrKey: process.env.SECRET,
 }
 passport.use(
   new Strategy(options, async (payload: JWTPayload, done) => {

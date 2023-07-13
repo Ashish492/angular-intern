@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UserModule } from '../user.module';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../model/user';
 import { env } from 'src/app/environments/environment';
 @Injectable({
-  providedIn: UserModule,
+  providedIn: 'root',
 })
 export class UserService {
   constructor(private _http: HttpClient) {}
@@ -17,7 +16,13 @@ export class UserService {
   editUser(id: User['id'], data: Partial<User>) {
     return this._http.patch<User>(`${env.apiEndpoint}/users/${id}`, data);
   }
-  getUsers() {
-    return this._http.get<User[]>(`${env.apiEndpoint}/users`);
+  getUsers(name: string | null = null) {
+    let params = {};
+    if (name) {
+      params = {
+        name,
+      };
+    }
+    return this._http.get<User[]>(`${env.apiEndpoint}/users`, { params });
   }
 }

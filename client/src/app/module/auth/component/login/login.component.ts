@@ -31,12 +31,10 @@ export class LoginComponent implements OnInit {
   }
   login() {
     this.loading = true;
-
     this._auth.login(this.form.value).subscribe({
       next: (result) => {
-        this.toast.success('called', 'success');
         this._auth.setAuthToken(result.token);
-        this.router.navigateByUrl('/users');
+        this.router.navigateByUrl('/user');
       },
       error: (err) => {
         this.loading = false;

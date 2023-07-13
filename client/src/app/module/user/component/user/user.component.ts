@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../model/user';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Subscription, debounceTime, throttleTime } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
@@ -17,6 +22,9 @@ export class UserComponent implements OnInit, OnDestroy {
   loadingData: boolean = false;
   private currentId: string = '';
   private httpSubscription!: Subscription;
+  private searchSubscription!: Subscription;
+  searchControl: FormControl = new FormControl('');
+  searchForm!: FormGroup;
   constructor(
     private _fb: FormBuilder,
     private _user: UserService,
@@ -24,10 +32,30 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
   ngOnDestroy(): void {
     this.httpSubscription && this.httpSubscription.unsubscribe();
+    this.searchSubscription && this.searchSubscription.unsubscribe();
   }
-  ngOnInit() {}
+  search(name: any) {}
+  ngOnInit() {
+    this.buildForm();
+    this.loadUsers();
+    this.searchHandler();
+  }
   getControls(controlName: string) {
     return this.form.get(controlName);
+  }
+  private filterByName(name: string) {
+    const regex = new RegExp(name, 'i');
+    this.users = this.users.filter((user) => regex.test(user.name));
+  }
+  private searchHandler() {
+    this.searchSubscription = this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300), // Debounce for 300ms
+        throttleTime(500) // Throttle for 500ms
+      )
+      .subscribe((value: string) => {
+        this.loadUsers(value);
+      });
   }
   editClickHandler(row: User) {
     this.currentId = row.id;
@@ -38,10 +66,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.loading = true;
     this._user.addUser(this.form.value).subscribe({
       next: (data) => {
-        this.users.unshift(data);
-        this._toast.info('user added', 'success');
+        (this.users = [data, ...this.users]),
+          this._toast.info('user added', 'success');
         this.loading = false;
-        document.getElementById('cancel')?.click();
+        document.getElementById('close')?.click();
         this.form.reset();
       },
       error: (err) => {
@@ -54,12 +82,15 @@ export class UserComponent implements OnInit, OnDestroy {
     this.loading = true;
     this._user.editUser(this.currentId, this.form.value).subscribe({
       next: (data) => {
-        let currentUser = this.users.find((user) => user.id === this.currentId);
-        currentUser = data;
-        // this.users = [...this.users]
+        let currentUser = this.users.findIndex(
+          (user) => user.id == this.currentId
+        );
+        if (currentUser !== -1) {
+          this.users[currentUser] = data;
+        }
         this.loading = false;
-        document.getElementById('cancel')?.click();
-        this._toast.error('user data updated', 'success');
+        document.getElementById('close')?.click();
+        this._toast.success('user data updated', 'success');
       },
       error: (error) => {
         this.loading = false;
@@ -69,13 +100,13 @@ export class UserComponent implements OnInit, OnDestroy {
   }
   deleteHandler(id: string) {
     this.currentId = id;
-    if (window.prompt('do yo want to delete')) {
+    if (window.confirm('do yo want to delete')) {
       this.loading = true;
       this._user.deleteUser(this.currentId).subscribe({
         next: (data) => {
           this.users = this.users.filter((user) => user.id !== this.currentId);
           // this.users = [...this.users]
-          this._toast.error('user deleted', 'success');
+          this._toast.success('user deleted', 'success');
         },
         error: (error) => {
           this._toast.error('unable to delete data', 'error');
@@ -83,9 +114,9 @@ export class UserComponent implements OnInit, OnDestroy {
       });
     }
   }
-  loadUsers() {
+  loadUsers(value: string | null = null) {
     this.loadingData = true;
-    this.httpSubscription = this._user.getUsers().subscribe({
+    this.httpSubscription = this._user.getUsers(value).subscribe({
       next: (users) => {
         this.loadingData = false;
         this.users = users;

@@ -25,7 +25,7 @@ export class AuthService {
     localStorage.removeItem('token');
   }
   getAuthToken() {
-    localStorage.getItem('token') ?? '';
+    return localStorage.getItem('token') ?? '';
   }
   isLogin(): boolean {
     return !!localStorage.getItem('token');

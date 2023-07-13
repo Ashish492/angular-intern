@@ -59,6 +59,12 @@
                       type="submit"
                       [disabled]="form.invalid"
                     >
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                        *ngIf="loading"
+                      ></span>
                       login
                     </button>
                   </div>

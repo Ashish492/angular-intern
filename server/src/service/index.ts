@@ -7,6 +7,8 @@ export {
 export {
 	insertUser,
 	findUserByEmail,
+	getUser,
 	getUsers,
-	removeUserByID
+	removeUserByID,
+	updateUserById
 } from "./user.service";

@@ -3,6 +3,13 @@
   data-bs-theme="dark"
 >
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink=""> Angular intern </a>
+    <a class="navbar-brand" routerLink="/user"> Angular intern </a>
+    <button
+      class="btn btn-outline-success"
+      type="button"
+      (click)="handleLogOut()"
+    >
+      logout
+    </button>
   </div>
 </nav>

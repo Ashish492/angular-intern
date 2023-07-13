@@ -1,9 +1,10 @@
 import http from 'http'
 import app from './app'
-import { logger } from './utils'
+import { connectToDb, logger } from './utils'
 const start = async () => {
   try {
     const server = http.createServer(app)
+    await connectToDb()
     server.listen(process.env.PORT, () => {
       logger.info(`server running on http://localhost:${process.env.PORT}`)
     })

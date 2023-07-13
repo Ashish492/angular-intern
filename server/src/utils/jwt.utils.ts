@@ -1,8 +1,8 @@
 import jwt, { Secret } from 'jsonwebtoken'
 import logger from './logger'
-
 export const signJWT = async (object: object, options?: jwt.SignOptions) => {
   const secret: Secret | undefined = process.env.SECRET
+  console.log(secret)
   if (!secret) {
     throw new Error('JWT secret is not defined')
   }
